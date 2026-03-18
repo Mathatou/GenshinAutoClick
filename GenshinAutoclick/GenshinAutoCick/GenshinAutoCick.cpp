@@ -1,11 +1,8 @@
 // AutoClickGenshin.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
 #include <iostream>
 #include <windows.h>
 #include <vector>
 #include <string>
-
-// This is our "Callback" function - Windows calls this for every window it finds
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     // Only look at windows that are actually visible to the user
     if (IsWindowVisible(hwnd)) {
@@ -18,7 +15,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
             if (title.find("Genshin Impact") != std::string::npos) {
                 HWND* lGenshinWindow = (HWND*)lParam;
                 *lGenshinWindow = hwnd; // Store the handle of the Genshin Impact window
-                return FALSE; // Return the title if it contains "Genshin Impact"
+                return FALSE; 
             }
         }
     }
@@ -28,8 +25,6 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 int main() {
     std::cout << "Listing all active window titles:" << std::endl;
     std::cout << "---------------------------------" << std::endl;
-
-    // Start the enumeration
     HWND GenshinWindow = NULL;
     EnumWindows(EnumWindowsProc, (LPARAM)&GenshinWindow);
     bool isActive = false; // Variable to track the active state of the autoclick
@@ -43,7 +38,7 @@ int main() {
             {
                 isActive = !isActive; // Toggle the active state
                 std::cout << "Status: " << (isActive ? "ON" : "OFF") << std::endl;
-                // Mission A: "Debounce" - Wait until the user lets go of F9
+				// Avoid flag switching from state to state on one press
                 while (GetAsyncKeyState(VK_F9) & 0x8000) {
 
                     Sleep(10);
@@ -53,9 +48,9 @@ int main() {
             {
                 std::cout << "Genshin is focused" << std::endl;
                 if (isActive)
-                { // Check if F1 
+                { 
                     std::cout << "F" << std::endl;
-                    // Simulate a keystroke (e.g., press 'F')
+                    // Simulate keystroke 
                     INPUT input = { 0 };
                     input.type = INPUT_KEYBOARD;
                     input.ki.wVk = 'F'; // Virtual-key code for 'F'
